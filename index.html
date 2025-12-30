@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Compatibilidade de Jantes - Altaroda</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 2px solid #e31e24;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            padding: 30px;
+            text-align: center;
+            border-bottom: 3px solid #e31e24;
+        }
+
+        .logo {
+            max-width: 300px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #ffffff;
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .search-container {
+            padding: 20px 30px;
+            background: #2d2d2d;
+            border-bottom: 2px solid #e31e24;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #555555;
+            border-radius: 8px;
+            background: #1a1a1a;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #e31e24;
+            box-shadow: 0 0 0 3px rgba(227, 30, 36, 0.2);
+        }
+
+        .search-box::placeholder {
+            color: #9ca3af;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #000000;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th {
+            padding: 18px 15px;
+            text-align: left;
+            color: #ffffff;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+            border-bottom: 3px solid #e31e24;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+        }
+
+        th:hover {
+            background: rgba(227, 30, 36, 0.1);
+        }
+
+        th::after {
+            content: ' ▼';
+            font-size: 0.7em;
+            opacity: 0.5;
+            margin-left: 5px;
+        }
+
+        .filter-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #1a1a1a;
+            border: 2px solid #e31e24;
+            border-radius: 8px;
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            min-width: 200px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
+        .filter-dropdown.active {
+            display: block;
+        }
+
+        .filter-option {
+            padding: 8px 12px;
+            color: #ffffff;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-option:hover {
+            background: #2d2d2d;
+        }
+
+        .filter-option input[type="checkbox"] {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            accent-color: #e31e24;
+        }
+
+        .filter-search {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            background: #2d2d2d;
+            border: 1px solid #555555;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 0.9em;
+        }
+
+        .filter-search:focus {
+            outline: none;
+            border-color: #e31e24;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #555555;
+        }
+
+        .filter-btn {
+            flex: 1;
+            padding: 6px;
+            background: #e31e24;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            background: #c51a20;
+        }
+
+        .filter-btn.clear {
+            background: #555555;
+        }
+
+        .filter-btn.clear:hover {
+            background: #666666;
+        }
+
+        td {
+            padding: 15px;
+            color: #ffffff;
+            border-bottom: 1px solid #333333;
+            font-size: 0.95em;
+        }
+
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: #2d2d2d;
+            transform: scale(1.01);
+            box-shadow: 0 4px 12px rgba(227, 30, 36, 0.3);
+        }
+
+        tbody tr:nth-child(even) {
+            background: #1a1a1a;
+        }
+
+        tbody tr:nth-child(even):hover {
+            background: #2d2d2d;
+        }
+
+        .no-results {
+            padding: 40px;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 1.2em;
+        }
+
+        .info-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #e31e24;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .footer {
+            padding: 20px;
+            text-align: center;
+            background: #000000;
+            color: #999999;
+            border-top: 2px solid #e31e24;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 15px;
+            background: #2d2d2d;
+            border-radius: 8px;
+            margin: 0 30px 20px 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #e31e24;
+        }
+
+        .stat-label {
+            color: #cccccc;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.85em;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Paginação */
+        .pagination-container {
+            padding: 20px 30px;
+            background: #1a1a1a;
+            border-top: 2px solid #e31e24;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .pagination-info {
+            color: #cccccc;
+            font-size: 0.95em;
+            text-align: center;
+        }
+
+        .pagination-info span {
+            color: #e31e24;
+            font-weight: 600;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .page-btn {
+            padding: 8px 12px;
+            background: #2d2d2d;
+            color: #ffffff;
+            border: 2px solid #555555;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: #e31e24;
+            border-color: #e31e24;
+            transform: scale(1.05);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .page-numbers {
+            display: flex;
+            gap: 5px;
+        }
+
+        .page-number {
+            padding: 8px 14px;
+            background: #2d2d2d;
+            color: #ffffff;
+            border: 2px solid #555555;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .page-number:hover {
+            background: #e31e24;
+            border-color: #e31e24;
+            transform: scale(1.05);
+        }
+
+        .page-number.active {
+            background: #e31e24;
+            border-color: #e31e24;
+        }
+
+        .pagination-size {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #cccccc;
+        }
+
+        .pagination-size label {
+            font-size: 0.9em;
+        }
+
+        .pagination-size select {
+            padding: 6px 12px;
+            background: #2d2d2d;
+            color: #ffffff;
+            border: 2px solid #555555;
+            border-radius: 6px;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-size select:hover {
+            border-color: #e31e24;
+        }
+
+        .pagination-size select:focus {
+            outline: none;
+            border-color: #e31e24;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .search-container,
+            .stats,
+            .pagination-container,
+            .footer {
+                display: none;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+
+            tbody tr:hover {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="altaroda2025w.png" alt="Altaroda Logo" class="logo">
+            <h1>Tabela de Compatibilidade de Jantes</h1>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="totalRecords">0</div>
+                <div class="stat-label">Total de Modelos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="visibleRecords">0</div>
+                <div class="stat-label">Resultados Visíveis</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="totalBrands">0</div>
+                <div class="stat-label">Marcas</div>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <input 
+                type="text" 
+                id="searchInput" 
+                class="search-box" 
+                placeholder="🔍 Pesquisar por marca, modelo, ano, furação, offset..."
+                autocomplete="off"
+            >
+        </div>
+
+        <div class="table-container">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th data-column="0">Marca</th>
+                        <th data-column="1">Modelo</th>
+                        <th data-column="2">Ano</th>
+                        <th data-column="3">Furação (PCD)</th>
+                        <th data-column="4">Offset</th>
+                        <th data-column="5">Centro (mm)</th>
+                        <th data-column="6">Tamanho Parafuso</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Dados carregados dinamicamente do JSON -->
+                </tbody>
+            </table>
+            
+            <!-- Paginação -->
+            <div class="pagination-container">
+                <div class="pagination-info">
+                    Página <span id="currentPage">1</span> de <span id="totalPages">1</span>
+                    <span style="margin-left: 20px;">Mostrando <span id="showingStart">0</span>-<span id="showingEnd">0</span> de <span id="totalFiltered">0</span> registos</span>
+                </div>
+                <div class="pagination-controls">
+                    <button id="firstPage" class="page-btn" title="Primeira página">❮❮</button>
+                    <button id="prevPage" class="page-btn" title="Página anterior">❮</button>
+                    <div id="pageNumbers" class="page-numbers"></div>
+                    <button id="nextPage" class="page-btn" title="Próxima página">❯</button>
+                    <button id="lastPage" class="page-btn" title="Última página">❯❯</button>
+                </div>
+                <div class="pagination-size">
+                    <label for="pageSize">Resultados por página:</label>
+                    <select id="pageSize">
+                        <option value="25">25</option>
+                        <option value="50" selected>50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="noResults" class="no-results" style="display: none;">
+                ❌ Nenhum resultado encontrado para a sua pesquisa.
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 Altaroda - Tabela de Compatibilidade de Jantes</p>
+            <p style="margin-top: 5px; font-size: 0.9em;">Todos os direitos reservados</p>
+        </div>
+    </div>
+    
+    <script>
+        // ========== VARIÁVEIS GLOBAIS ==========
+        let allVehicles = []; // Todos os dados carregados do JSON
+        let filteredVehicles = []; // Dados filtrados
+        let currentPage = 1;
+        let pageSize = 50;
+        
+        const searchInput = document.getElementById('searchInput');
+        const tableBody = document.getElementById('tableBody');
+        const noResults = document.getElementById('noResults');
+        const visibleRecords = document.getElementById('visibleRecords');
+        const totalRecords = document.getElementById('totalRecords');
+        const totalBrands = document.getElementById('totalBrands');
+        
+        // Elementos de paginação
+        const currentPageSpan = document.getElementById('currentPage');
+        const totalPagesSpan = document.getElementById('totalPages');
+        const showingStartSpan = document.getElementById('showingStart');
+        const showingEndSpan = document.getElementById('showingEnd');
+        const totalFilteredSpan = document.getElementById('totalFiltered');
+        const pageNumbersContainer = document.getElementById('pageNumbers');
+        const pageSizeSelect = document.getElementById('pageSize');
+        
+        let activeFilters = {
+            0: new Set(), // Marca
+            1: new Set(), // Modelo
+            2: new Set(), // Ano
+            3: new Set(), // Furação
+            4: new Set(), // Offset
+            5: new Set(), // Centro
+            6: new Set()  // Tamanho Parafuso
+        };
+
+        // ========== CARREGAR DADOS DO JSON ==========
+        async function loadData() {
+            try {
+                const response = await fetch('dados.json');
+                if (!response.ok) throw new Error('Erro ao carregar dados');
+                
+                allVehicles = await response.json();
+                filteredVehicles = [...allVehicles];
+                
+                updateStats();
+                renderTable();
+                updatePagination();
+                
+                console.log(`✅ ${allVehicles.length} veículos carregados com sucesso!`);
+            } catch (error) {
+                console.error('❌ Erro ao carregar dados:', error);
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #e31e24;">❌ Erro ao carregar dados. Verifique se o ficheiro dados.json existe.</td></tr>';
+            }
+        }
+
+        // ========== RENDERIZAR TABELA ==========
+        function renderTable() {
+            tableBody.innerHTML = '';
+            
+            // Calcular dados para a página atual
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = Math.min(startIndex + pageSize, filteredVehicles.length);
+            const pageData = filteredVehicles.slice(startIndex, endIndex);
+            
+            if (pageData.length === 0) {
+                noResults.style.display = 'block';
+                updatePaginationInfo();
+                return;
+            }
+            
+            noResults.style.display = 'none';
+            
+            // Criar linhas da tabela
+            pageData.forEach(vehicle => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${vehicle.marca}</td>
+                    <td>${vehicle.modelo}</td>
+                    <td>${vehicle.ano}</td>
+                    <td><span class="info-badge">${vehicle.furacao}</span></td>
+                    <td>${vehicle.offset}</td>
+                    <td>${vehicle.centro}</td>
+                    <td>${vehicle.parafuso}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            updatePaginationInfo();
+        }
+
+        // ========== ATUALIZAR ESTATÍSTICAS ==========
+        function updateStats() {
+            totalRecords.textContent = allVehicles.length;
+            
+            const brands = new Set(allVehicles.map(v => v.marca));
+            totalBrands.textContent = brands.size;
+        }
+
+        // ========== FILTRAR DADOS ==========
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            filteredVehicles = allVehicles.filter(vehicle => {
+                // Verificar filtros de coluna
+                for (let col = 0; col < 7; col++) {
+                    if (activeFilters[col].size > 0) {
+                        const value = getVehicleColumnValue(vehicle, col);
+                        if (!activeFilters[col].has(value)) {
+                            return false;
+                        }
+                    }
+                }
+                
+                // Verificar pesquisa
+                if (searchTerm) {
+                    const searchableText = `${vehicle.marca} ${vehicle.modelo} ${vehicle.ano} ${vehicle.furacao} ${vehicle.offset} ${vehicle.centro} ${vehicle.parafuso}`.toLowerCase();
+                    return searchableText.includes(searchTerm);
+                }
+                
+                return true;
+            });
+            
+            // Voltar para a primeira página
+            currentPage = 1;
+            renderTable();
+            updatePagination();
+            updateVisibleRecordsCount();
+        }
+
+        function getVehicleColumnValue(vehicle, columnIndex) {
+            const map = ['marca', 'modelo', 'ano', 'furacao', 'offset', 'centro', 'parafuso'];
+            return vehicle[map[columnIndex]];
+        }
+
+        function updateVisibleRecordsCount() {
+            visibleRecords.textContent = filteredVehicles.length;
+        }
+
+        // ========== PAGINAÇÃO ==========
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredVehicles.length / pageSize);
+            totalPagesSpan.textContent = totalPages || 1;
+            currentPageSpan.textContent = currentPage;
+            
+            // Atualizar botões
+            document.getElementById('firstPage').disabled = currentPage === 1;
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled = currentPage >= totalPages;
+            document.getElementById('lastPage').disabled = currentPage >= totalPages;
+            
+            // Criar números de página
+            renderPageNumbers(totalPages);
+        }
+
+        function renderPageNumbers(totalPages) {
+            pageNumbersContainer.innerHTML = '';
+            
+            if (totalPages <= 1) return;
+            
+            // Mostrar até 7 páginas
+            let startPage = Math.max(1, currentPage - 3);
+            let endPage = Math.min(totalPages, currentPage + 3);
+            
+            // Ajustar se estivermos no início ou fim
+            if (currentPage <= 4) {
+                endPage = Math.min(7, totalPages);
+            } else if (currentPage >= totalPages - 3) {
+                startPage = Math.max(1, totalPages - 6);
+            }
+            
+            // Primeira página + ...
+            if (startPage > 1) {
+                createPageNumber(1);
+                if (startPage > 2) {
+                    const dots = document.createElement('span');
+                    dots.textContent = '...';
+                    dots.style.padding = '0 5px';
+                    dots.style.color = '#cccccc';
+                    pageNumbersContainer.appendChild(dots);
+                }
+            }
+            
+            // Páginas do meio
+            for (let i = startPage; i <= endPage; i++) {
+                createPageNumber(i);
+            }
+            
+            // ... + última página
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    const dots = document.createElement('span');
+                    dots.textContent = '...';
+                    dots.style.padding = '0 5px';
+                    dots.style.color = '#cccccc';
+                    pageNumbersContainer.appendChild(dots);
+                }
+                createPageNumber(totalPages);
+            }
+        }
+
+        function createPageNumber(pageNum) {
+            const btn = document.createElement('button');
+            btn.className = 'page-number' + (pageNum === currentPage ? ' active' : '');
+            btn.textContent = pageNum;
+            btn.onclick = () => goToPage(pageNum);
+            pageNumbersContainer.appendChild(btn);
+        }
+
+        function goToPage(page) {
+            const totalPages = Math.ceil(filteredVehicles.length / pageSize);
+            if (page < 1 || page > totalPages) return;
+            
+            currentPage = page;
+            renderTable();
+            updatePagination();
+            
+            // Scroll para o topo da tabela
+            document.querySelector('.table-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updatePaginationInfo() {
+            const startIndex = (currentPage - 1) * pageSize + 1;
+            const endIndex = Math.min(currentPage * pageSize, filteredVehicles.length);
+            
+            showingStartSpan.textContent = filteredVehicles.length > 0 ? startIndex : 0;
+            showingEndSpan.textContent = endIndex;
+            totalFilteredSpan.textContent = filteredVehicles.length;
+        }
+
+        // ========== FILTROS DE COLUNA ==========
+        function createFilterDropdown(columnIndex, th) {
+            // Remover dropdowns existentes
+            document.querySelectorAll('.filter-dropdown').forEach(d => d.remove());
+
+            const dropdown = document.createElement('div');
+            dropdown.className = 'filter-dropdown active';
+
+            // Obter valores únicos
+            const values = new Set();
+            allVehicles.forEach(vehicle => {
+                const value = getVehicleColumnValue(vehicle, columnIndex);
+                if (value) values.add(value);
+            });
+
+            const sortedValues = Array.from(values).sort((a, b) => {
+                const numA = parseFloat(a);
+                const numB = parseFloat(b);
+                if (!isNaN(numA) && !isNaN(numB)) {
+                    return numA - numB;
+                }
+                return a.localeCompare(b, 'pt');
+            });            // Input de pesquisa
+            const searchInput = document.createElement('input');
+            searchInput.type = 'text';
+            searchInput.className = 'filter-search';
+            searchInput.placeholder = 'Pesquisar...';
+            
+            // Prevenir que cliques no input fechem o dropdown
+            searchInput.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+            
+            // Prevenir que teclas no input fechem o dropdown
+            searchInput.addEventListener('keydown', (e) => {
+                e.stopPropagation();
+            });
+            
+            dropdown.appendChild(searchInput);
+
+            // Container de opções
+            const optionsContainer = document.createElement('div');
+            optionsContainer.style.maxHeight = '200px';
+            optionsContainer.style.overflowY = 'auto';
+
+            sortedValues.forEach(value => {
+                const option = document.createElement('div');
+                option.className = 'filter-option';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = activeFilters[columnIndex].size === 0 || activeFilters[columnIndex].has(value);
+                checkbox.dataset.value = value;
+
+                const label = document.createElement('span');
+                label.textContent = value;
+
+                option.appendChild(checkbox);
+                option.appendChild(label);
+
+                // Prevenir propagação de eventos para não fechar o dropdown
+                option.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (e.target !== checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                    }
+                });
+
+                optionsContainer.appendChild(option);
+            });
+
+            dropdown.appendChild(optionsContainer);
+
+            // Pesquisa no filtro
+            searchInput.addEventListener('input', (e) => {
+                e.stopPropagation();
+                const searchTerm = e.target.value.toLowerCase();
+                const options = optionsContainer.querySelectorAll('.filter-option');
+                options.forEach(option => {
+                    const text = option.textContent.toLowerCase();
+                    option.style.display = text.includes(searchTerm) ? 'flex' : 'none';
+                });
+            });            // Botões de ação
+            const actions = document.createElement('div');
+            actions.className = 'filter-actions';
+
+            const applyBtn = document.createElement('button');
+            applyBtn.className = 'filter-btn';
+            applyBtn.textContent = 'Aplicar';
+            applyBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]');
+                activeFilters[columnIndex].clear();
+                
+                checkboxes.forEach(cb => {
+                    if (cb.checked) {
+                        activeFilters[columnIndex].add(cb.dataset.value);
+                    }
+                });
+
+                applyFilters();
+                dropdown.remove();
+            });            const clearBtn = document.createElement('button');
+            clearBtn.className = 'filter-btn clear';
+            clearBtn.textContent = 'Limpar';
+            clearBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                // Desmarcar todas as checkboxes visualmente
+                const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(cb => {
+                    cb.checked = false;
+                });
+                
+                // Limpar o filtro desta coluna
+                activeFilters[columnIndex].clear();
+                
+                // Aplicar filtros (atualiza a tabela)
+                applyFilters();
+                
+                // NÃO fechar o dropdown - deixar aberto para ver as caixas desmarcadas
+                // dropdown.remove();
+            });actions.appendChild(applyBtn);
+            actions.appendChild(clearBtn);
+            dropdown.appendChild(actions);
+
+            // Prevenir que cliques dentro do dropdown o fechem
+            dropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
+            th.style.position = 'relative';
+            th.appendChild(dropdown);
+
+            // Fechar ao clicar fora
+            setTimeout(() => {
+                document.addEventListener('click', function closeDropdown(e) {
+                    if (!th.contains(e.target)) {
+                        dropdown.remove();
+                        document.removeEventListener('click', closeDropdown);
+                    }
+                });
+            }, 0);
+        }
+
+        // ========== EVENT LISTENERS ==========
+        // Cabeçalhos clicáveis para filtros
+        document.querySelectorAll('th[data-column]').forEach(th => {
+            th.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const columnIndex = parseInt(th.dataset.column);
+                createFilterDropdown(columnIndex, th);
+            });
+        });
+
+        // Pesquisa
+        searchInput.addEventListener('input', applyFilters);
+
+        // Paginação
+        document.getElementById('firstPage').addEventListener('click', () => goToPage(1));
+        document.getElementById('prevPage').addEventListener('click', () => goToPage(currentPage - 1));
+        document.getElementById('nextPage').addEventListener('click', () => goToPage(currentPage + 1));
+        document.getElementById('lastPage').addEventListener('click', () => {
+            const totalPages = Math.ceil(filteredVehicles.length / pageSize);
+            goToPage(totalPages);
+        });
+
+        // Mudança de tamanho de página
+        pageSizeSelect.addEventListener('change', (e) => {
+            pageSize = parseInt(e.target.value);
+            currentPage = 1;
+            renderTable();
+            updatePagination();
+        });
+
+        // Tecla Ctrl+P para imprimir
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'p') {
+                e.preventDefault();
+                window.print();
+            }
+        });
+
+        // ========== INICIALIZAÇÃO ==========
+        loadData();
+        
+        console.log('🚗 Tabela de Compatibilidade de Jantes - Altaroda 2025');
+    </script>
+</body>
+</html>

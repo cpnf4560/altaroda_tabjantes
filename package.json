@@ -1,0 +1,24 @@
+{
+  "name": "altaroda-compatibilidade-jantes",
+  "version": "1.0.0",
+  "description": "Tabela de Compatibilidade de Jantes - Altaroda 2025",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "convert": "node converter.js"
+  },
+  "keywords": [
+    "altaroda",
+    "jantes",
+    "compatibilidade",
+    "wheels"
+  ],
+  "author": "Altaroda",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
