@@ -13,7 +13,11 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            background: linear-gradient(135deg,                        <th data-column="4">Offset</th>
+                        <th data-column="5">Centro (mm)</th>
+                        <th data-column="6">Tamanho Perno</th>
+                    </tr>
+                </thead>a1a 0%, #2d2d2d 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -470,15 +474,14 @@
 
         <div class="table-container">
             <table id="dataTable">
-                <thead>
-                    <tr>
+                <thead>                    <tr>
                         <th data-column="0">Marca</th>
                         <th data-column="1">Modelo</th>
                         <th data-column="2">Ano</th>
                         <th data-column="3">Furação (PCD)</th>
                         <th data-column="4">Offset</th>
                         <th data-column="5">Centro (mm)</th>
-                        <th data-column="6">Tamanho Parafuso</th>
+                        <th data-column="6">Tamanho Perno</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -513,11 +516,15 @@
             <div id="noResults" class="no-results" style="display: none;">
                 ❌ Nenhum resultado encontrado para a sua pesquisa.
             </div>
-        </div>
-
-        <div class="footer">
+        </div>        <div class="footer">
             <p>&copy; 2025 Altaroda - Tabela de Compatibilidade de Jantes</p>
             <p style="margin-top: 5px; font-size: 0.9em;">Todos os direitos reservados</p>
+            <p style="margin-top: 15px; font-size: 0.85em; color: #9ca3af; max-width: 900px; margin-left: auto; margin-right: auto; line-height: 1.5;">
+                ⚠️ <strong>Aviso Legal:</strong> Este projeto utiliza dados provenientes de fontes públicas de referência na área automóvel. 
+                As informações apresentadas têm caráter meramente informativo e devem ser sempre verificadas junto do fabricante 
+                ou de um profissional qualificado antes de qualquer aplicação. A Altaroda não se responsabiliza por eventuais 
+                imprecisões ou alterações nos dados apresentados.
+            </p>
         </div>
     </div>
     
@@ -607,11 +614,10 @@
             });
             
             updatePaginationInfo();
-        }
-
-        // ========== ATUALIZAR ESTATÍSTICAS ==========
+        }        // ========== ATUALIZAR ESTATÍSTICAS ==========
         function updateStats() {
             totalRecords.textContent = allVehicles.length;
+            visibleRecords.textContent = filteredVehicles.length;
             
             const brands = new Set(allVehicles.map(v => v.marca));
             totalBrands.textContent = brands.size;
