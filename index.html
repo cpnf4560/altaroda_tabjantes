@@ -96,9 +96,7 @@
             position: sticky;
             top: 0;
             z-index: 10;
-        }
-
-        th {
+        }        th {
             padding: 18px 15px;
             text-align: left;
             color: #ffffff;
@@ -110,6 +108,15 @@
             cursor: pointer;
             position: relative;
             user-select: none;
+        }
+
+        /* Alinhamento específico por coluna nos cabeçalhos */
+        th:nth-child(1), th:nth-child(2) {
+            text-align: left;
+        }
+
+        th:nth-child(3), th:nth-child(4), th:nth-child(5), th:nth-child(6), th:nth-child(7) {
+            text-align: center;
         }
 
         th:hover {
@@ -212,13 +219,20 @@
 
         .filter-btn.clear:hover {
             background: #666666;
-        }
-
-        td {
+        }        td {
             padding: 15px;
             color: #ffffff;
             border-bottom: 1px solid #333333;
             font-size: 0.95em;
+        }
+
+        /* Alinhamento específico por coluna */
+        td:nth-child(1), td:nth-child(2) {
+            text-align: left;
+        }
+
+        td:nth-child(3), td:nth-child(4), td:nth-child(5), td:nth-child(6), td:nth-child(7) {
+            text-align: center;
         }
 
         tbody tr {
