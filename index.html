@@ -599,11 +599,11 @@
                 // Substituir B por P (perno) e N por F (fêmea) no campo parafuso
                 let parafusoFormatted = vehicle.parafuso.replace(/^B /, 'P ').replace(/^N /, 'F ');
                 
-                // Adicionar ícone baseado no tipo (P = perno 🔩, F = fêmea 🔧)
+                // Adicionar ícone baseado no tipo (P = perno 🔩, F = fêmea 🔘)
                 if (parafusoFormatted.startsWith('P ')) {
                     parafusoFormatted = '🔩 ' + parafusoFormatted;
                 } else if (parafusoFormatted.startsWith('F ')) {
-                    parafusoFormatted = '🔧 ' + parafusoFormatted;
+                    parafusoFormatted = '🔘 ' + parafusoFormatted;
                 }
                 
                 const row = document.createElement('tr');
