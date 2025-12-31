@@ -473,15 +473,14 @@
         </div>
 
         <div class="table-container">
-            <table id="dataTable">
-                <thead>                    <tr>
+            <table id="dataTable">                <thead>                    <tr>
                         <th data-column="0">Marca</th>
                         <th data-column="1">Modelo</th>
                         <th data-column="2">Ano</th>
                         <th data-column="3">Furação (PCD)</th>
                         <th data-column="4">Offset</th>
                         <th data-column="5">Centro (mm)</th>
-                        <th data-column="6">Tamanho Perno</th>
+                        <th data-column="6">Passo de Rosca</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -550,15 +549,14 @@
         const totalFilteredSpan = document.getElementById('totalFiltered');
         const pageNumbersContainer = document.getElementById('pageNumbers');
         const pageSizeSelect = document.getElementById('pageSize');
-        
-        let activeFilters = {
+          let activeFilters = {
             0: new Set(), // Marca
             1: new Set(), // Modelo
             2: new Set(), // Ano
             3: new Set(), // Furação
             4: new Set(), // Offset
             5: new Set(), // Centro
-            6: new Set()  // Tamanho Parafuso
+            6: new Set()  // Passo de Rosca
         };
 
         // ========== CARREGAR DADOS DO JSON ==========
@@ -596,10 +594,18 @@
                 return;
             }
             
-            noResults.style.display = 'none';
-            
-            // Criar linhas da tabela
+            noResults.style.display = 'none';            // Criar linhas da tabela
             pageData.forEach(vehicle => {
+                // Substituir B por P (perno) e N por F (fêmea) no campo parafuso
+                let parafusoFormatted = vehicle.parafuso.replace(/^B /, 'P ').replace(/^N /, 'F ');
+                
+                // Adicionar ícone baseado no tipo (P = perno 🔩, F = fêmea 🔧)
+                if (parafusoFormatted.startsWith('P ')) {
+                    parafusoFormatted = '🔩 ' + parafusoFormatted;
+                } else if (parafusoFormatted.startsWith('F ')) {
+                    parafusoFormatted = '🔧 ' + parafusoFormatted;
+                }
+                
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${vehicle.marca}</td>
@@ -608,7 +614,7 @@
                     <td><span class="info-badge">${vehicle.furacao}</span></td>
                     <td>${vehicle.offset}</td>
                     <td>${vehicle.centro}</td>
-                    <td>${vehicle.parafuso}</td>
+                    <td>${parafusoFormatted}</td>
                 `;
                 tableBody.appendChild(row);
             });
@@ -797,9 +803,7 @@
             // Container de opções
             const optionsContainer = document.createElement('div');
             optionsContainer.style.maxHeight = '200px';
-            optionsContainer.style.overflowY = 'auto';
-
-            sortedValues.forEach(value => {
+            optionsContainer.style.overflowY = 'auto';            sortedValues.forEach(value => {
                 const option = document.createElement('div');
                 option.className = 'filter-option';
 
@@ -809,7 +813,9 @@
                 checkbox.dataset.value = value;
 
                 const label = document.createElement('span');
-                label.textContent = value;
+                // Aplicar formatação para coluna Passo de Rosca (índice 6)
+                const displayValue = columnIndex === 6 ? value.replace(/^B /, 'P ').replace(/^N /, 'F ') : value;
+                label.textContent = displayValue;
 
                 option.appendChild(checkbox);
                 option.appendChild(label);
